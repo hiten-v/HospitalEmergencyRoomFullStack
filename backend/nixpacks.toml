@@ -1,0 +1,11 @@
+[phases.setup]
+cmds = ["apt-get update && apt-get install -y maven"]
+
+[phases.install]
+cmds = ["mvn dependency:go-offline"]
+
+[phases.build]
+cmds = ["mvn clean package -DskipTests"]
+
+[start]
+cmd = ["java", "-jar", "target/hospital-er-*.jar"]

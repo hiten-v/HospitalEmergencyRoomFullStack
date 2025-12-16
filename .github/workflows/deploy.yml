@@ -66,7 +66,7 @@ jobs:
     
     - name: Deploy to Railway
       env:
-        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        RAILWAY_TOKEN: ${{ a1f31799-b425-44cc-9981-f2f275686c29}}
       run: |
         # Install Railway CLI
         curl -fsSL https://railway.app/install.sh | sh
@@ -95,7 +95,7 @@ jobs:
     
     - name: Deploy to Vercel
       env:
-        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        VERCEL_TOKEN: ${{ RIPjCA2K2dve1vOGDfTH8bm7 }}
         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       run: |
