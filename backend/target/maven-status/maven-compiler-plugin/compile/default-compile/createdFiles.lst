@@ -1,0 +1,5 @@
+com\hospital\er\Patient.class
+com\hospital\er\PatientController.class
+com\hospital\er\HospitalService.class
+com\hospital\er\HospitalApplication.class
+com\hospital\er\PatientRepository.class
