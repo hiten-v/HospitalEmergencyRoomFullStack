@@ -8,4 +8,4 @@ cmds = ["mvn dependency:go-offline"]
 cmds = ["mvn clean package -DskipTests"]
 
 [start]
-cmd = ["java", "-jar", "target/hospital-er-*.jar"]
+cmd = "java -jar target/hospital-er-*.jar"
