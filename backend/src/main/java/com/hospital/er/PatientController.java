@@ -7,7 +7,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {
+    "http://localhost:3000",
+    "https://hospitalemergencyroomfullstack-production.up.railway.app", // Add this
+    "http://localhost:8080"  // Optional for local testing
+})
 public class PatientController {
     
     @Autowired
