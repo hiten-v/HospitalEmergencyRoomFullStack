@@ -98,11 +98,11 @@ public class HospitalService {
         return stats;
     }
     
-    // Load existing patients into priority queue on startup
-    @PostConstruct  // This runs after Spring initializes the bean
-    public void init() {
-        List<Patient> waitingPatients = patientRepository.findByStatus("WAITING");
-        priorityQueue.addAll(waitingPatients);
-        System.out.println("✅ Loaded " + waitingPatients.size() + " patients into priority queue from MongoDB");
-    }
+    // // Load existing patients into priority queue on startup
+    // @PostConstruct  // This runs after Spring initializes the bean
+    // public void init() {
+    //     List<Patient> waitingPatients = patientRepository.findByStatus("WAITING");
+    //     priorityQueue.addAll(waitingPatients);
+    //     System.out.println("✅ Loaded " + waitingPatients.size() + " patients into priority queue from MongoDB");
+    // }
 }
