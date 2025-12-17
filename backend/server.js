@@ -316,13 +316,3 @@ app.get('/api/stats', async (req, res) => {
 // Initialize data on startup
 initializeData();
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
-  console.log(`🔗 MongoDB Connected: ${mongoose.connection.readyState === 1 ? 'Yes' : 'No'}`);
-  console.log(`🌐 Available endpoints:`);
-  console.log(`   http://localhost:${PORT}/api/test`);
-  console.log(`   http://localhost:${PORT}/api/patients/active  (Active queue - EMERGENCY FIRST)`);
-  console.log(`   http://localhost:${PORT}/api/patients/treated (Treated patients)`);
-  console.log(`   http://localhost:${PORT}/api/stats`);
-});
