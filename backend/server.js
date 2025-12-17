@@ -10,9 +10,30 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/hospital')
-.then(() => console.log('✅ MongoDB Connected'))
-.catch(err => console.error('❌ MongoDB Connection Error:', err.message));
+// NEW CODE - Use this instead
+mongoose.connect(process.env.MONGODB_URI, { // REMOVE the '|| localhost' fallback
+    serverSelectionTimeoutMS: 10000,
+    socketTimeoutMS: 45000,
+})
+.then(() => {
+    console.log('✅ MongoDB Connected');
+    
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`✅ Server running on port ${PORT}`);
+        console.log(`🔗 MongoDB Connected: ${mongoose.connection.readyState === 1 ? 'Yes' : 'No'}`);
+        console.log(`🌐 Available endpoints:`);
+        console.log(`   http://localhost:${PORT}/api/test`);
+        console.log(`   http://localhost:${PORT}/api/patients/active`);
+        console.log(`   http://localhost:${PORT}/api/patients/treated`);
+        console.log(`   http://localhost:${PORT}/api/stats`);
+    });
+})
+.catch(err => {
+    console.error('❌ FATAL MongoDB Connection Error:', err.message);
+    console.error('Failed to connect to MongoDB. Exiting...');
+    process.exit(1); // Stop the app if DB connection fails
+});
 
 // Patient Schema
 const patientSchema = new mongoose.Schema({
