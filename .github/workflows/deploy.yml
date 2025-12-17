@@ -14,16 +14,19 @@ jobs:
         RENDER_SERVICE_ID: ${{ secrets.RENDER_BACKEND_ID }}
         RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
       run: |
-        # Trigger Render deployment
         curl -X POST "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys" \
-          -H "Authorization: Bearer $RENDER_API_KEY" \
-          -H "Content-Type: application/json"
+          -H "Authorization: Bearer $RENDER_API_KEY"
 
   deploy-frontend:
     runs-on: ubuntu-latest
     
     steps:
-    - name: 🚀 Deploy Frontend to Vercel
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: 🚀 Deploy to Vercel
       uses: amondnet/vercel-action@v25
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
