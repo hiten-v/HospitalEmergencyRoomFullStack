@@ -14,7 +14,9 @@ RUN apk add --no-cache ca-certificates && \
     update-ca-certificates
 
 WORKDIR /app
-COPY --from=builder /app/target/hospital-er-*.jar app.jar
+
+# Copy the JAR file - use wildcard to find it
+COPY --from=builder /app/target/*.jar app.jar
 
 # Run with ALL necessary TLS flags
 CMD ["java", \
