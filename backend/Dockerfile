@@ -1,9 +1,7 @@
-FROM openjdk:17-alpine
+FROM openjdk:17-slim
 
 WORKDIR /app
-
-# Copy your JAR
 COPY target/hospital-er.jar app.jar
 
-# Simple run command
-CMD ["java", "-jar", "app.jar"]
+# Add TLS fix
+CMD ["java", "-Djdk.tls.client.protocols=TLSv1.2", "-jar", "app.jar"]
