@@ -7,12 +7,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = {
-    "http://localhost:3000",
-    "https://hospital-emergency-room.vercel.app/",
-    "https://hospitalemergencyroomfullstack-1.onrender.com",
-    "http://localhost:8080"  // Optional for local testing
-})
+@CrossOrigin(origins = "*")
 public class PatientController {
     
     @Autowired
@@ -20,6 +15,15 @@ public class PatientController {
     
     @Autowired
     private PatientRepository patientRepository;
+
+    @GetMapping("/test")
+    public Map<String, String> test() {
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "ok");
+        response.put("time", new Date().toString());
+        response.put("message", "Backend is working!");
+        return response;
+    }
 
     @GetMapping("/patients")
     public List<Patient> getAllPatients() {
@@ -92,5 +96,17 @@ public class PatientController {
     @GetMapping("/stats")
     public Map<String, Object> getStats() {
         return hospitalService.getStats();
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> handleException(Exception ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        error.put("timestamp", new Date().toString());
+        
+        // Print stack trace for debugging
+        ex.printStackTrace();
+        
+        return ResponseEntity.status(500).body(error);
     }
 }
