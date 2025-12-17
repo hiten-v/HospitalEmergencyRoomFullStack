@@ -1,0 +1,73 @@
+name: Deploy Full-Stack App
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # 1. TEST BACKEND
+  test-backend:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+    
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+        cache-dependency-path: 'backend/package-lock.json'
+    
+    - name: 📦 Install backend dependencies
+      run: npm ci
+      working-directory: ./backend
+    
+    - name: 🧪 Verify backend starts
+      run: |
+        # Start server in background
+        node backend/server.js &
+        SERVER_PID=$!
+        
+        # Wait a moment, then test basic endpoint
+        sleep 3
+        curl -f http://localhost:10000/api/test || exit 1
+        
+        # Kill the server
+        kill $SERVER_PID
+
+  # 2. DEPLOY BACKEND TO RENDER
+  deploy-backend:
+    needs: test-backend
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 🚀 Deploy to Render
+      env:
+        RENDER_SERVICE_ID: ${{ secrets.RENDER_BACKEND_ID }}
+        RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+      run: |
+        curl -X POST "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys" \
+          -H "Authorization: Bearer $RENDER_API_KEY" \
+          -H "Content-Type: application/json"
+
+  # 3. DEPLOY FRONTEND TO VERCEL
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+    
+    - name: 🚀 Deploy to Vercel
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        vercel-args: '--prod'  # Deploy to production
