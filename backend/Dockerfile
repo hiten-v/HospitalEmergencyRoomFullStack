@@ -1,7 +1,15 @@
+FROM maven:3.9.6-eclipse-temurin-17 AS builder
+
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+COPY src ./src
+RUN mvn clean package -DskipTests
+
 FROM eclipse-temurin:17-jre
 
 WORKDIR /app
-COPY target/hospital-er.jar app.jar
+COPY --from=builder /app/target/hospital-er.jar app.jar
 
-# Simple run
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-Djdk.tls.client.protocols=TLSv1.2", "-jar", "app.jar"]
