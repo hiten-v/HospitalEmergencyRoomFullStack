@@ -9,7 +9,8 @@ import java.util.Map;
 @RequestMapping("/api")
 @CrossOrigin(origins = {
     "http://localhost:3000",
-    "https://hospitalemergencyroomfullstack-production.up.railway.app", // Add this
+    "https://hospital-emergency-room.vercel.app/",
+    "https://hospitalemergencyroomfullstack-1.onrender.com",
     "http://localhost:8080"  // Optional for local testing
 })
 public class PatientController {
