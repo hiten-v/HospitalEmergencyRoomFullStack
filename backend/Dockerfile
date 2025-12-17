@@ -1,21 +1,25 @@
-FROM openjdk:17-slim
+FROM maven:3.9.6-eclipse-temurin-17-alpine AS builder
 
-# Install Maven
-RUN apt-get update && apt-get install -y maven
-
-# Set working directory
 WORKDIR /app
-
-# Copy Maven files first (for better caching)
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 
-# Copy source code
 COPY src ./src
-
-# Build the application
 RUN mvn clean package -DskipTests
 
-# Run the application
-EXPOSE 8080
-CMD ["java", "-Djdk.tls.client.protocols=TLSv1.2", "-jar", "target/hospital-er-*.jar"]
+FROM eclipse-temurin:17-jre-alpine
+
+# Install and update CA certificates - THIS IS CRITICAL FOR SSL
+RUN apk add --no-cache ca-certificates && \
+    update-ca-certificates
+
+WORKDIR /app
+COPY --from=builder /app/target/hospital-er-*.jar app.jar
+
+# Run with ALL necessary TLS flags
+CMD ["java", \
+    "-Djdk.tls.client.protocols=TLSv1.2", \
+    "-Dhttps.protocols=TLSv1.2", \
+    "-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts", \
+    "-Djavax.net.ssl.trustStorePassword=changeit", \
+    "-jar", "app.jar"]
