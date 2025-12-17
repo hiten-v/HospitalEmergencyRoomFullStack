@@ -1,9 +1,9 @@
 [phases.setup]
 cmds = [
     "apt-get update",
-    "apt-get install -y ca-certificates openssl",  
-    "update-ca-certificates",  
-    "apt-get install -y maven"
+    "apt-get install -y openjdk-17-jdk ca-certificates openssl maven",  # Install Java 17
+    "update-ca-certificates",
+    "update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java"  # Set Java 17 as default
 ]
 
 [phases.install]
@@ -13,4 +13,4 @@ cmds = ["mvn dependency:go-offline"]
 cmds = ["mvn clean package -DskipTests"]
 
 [start]
-cmd = "java -Djdk.tls.client.protocols=TLSv1.2 -jar target/hospital-er-*.jar"  
+cmd = "java -Djdk.tls.client.protocols=TLSv1.2 -jar target/hospital-er-*.jar"
