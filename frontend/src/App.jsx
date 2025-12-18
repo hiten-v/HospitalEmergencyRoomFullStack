@@ -306,7 +306,7 @@ function App() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h1 className="text-3xl font-bold text-white flex items-center">
-                Hospital Emergency Room Management hello ...
+                Hospital Emergency Room Management
               </h1>
               <p className="text-gray-900 mt-1">Priority-based patient queue with emergency handling</p>
             </div>
